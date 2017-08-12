@@ -3,11 +3,17 @@ using System.Collections;
 
 public class boidsGeneration : MonoBehaviour {
 	//store gameObject reference on global contex
-	public int NumberOfBoids;
-	public GameObject[] Boids;
+	public int QuantityBoids;
+	public float VisionRange;
+	public float SeparationWeight;
+	public float CohesionWeight;
+	public float AlignmentWeight;
+
+	public GameObject[] Flock;
 
 
-	GameObject CreateBoid()
+
+	GameObject CreateBoid(int i)
 	{
 		//spawn boid
 		GameObject boid = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -16,19 +22,29 @@ public class boidsGeneration : MonoBehaviour {
 			Random.Range(-10.0f, 10.0f), 
 			Random.Range(-10.0f, 10.0f), 
 			Random.Range(-10.0f, 10.0f));
+		Vector3 velocity = new Vector3(
+			Random.Range(-1.0f, 1.0f), 
+			Random.Range(-1.0f, 1.0f), 
+			Random.Range(-1.0f, 1.0f));
 		boid.transform.position = position;
-		boid.name = "boid";
+		boid.name = "boid" + i.ToString();
 		//add components
-		boid.AddComponent<boidBehaviour>();
+		boid.AddComponent<boidBehaviour> ();
+		boid.AddComponent<Rigidbody> ();
+
+		//edit components
+		Rigidbody rb = boid.GetComponent<Rigidbody> ();
+		rb.useGravity = false;
+		rb.velocity = velocity;
 
 		return boid;
 	}
 
 	void Start()
 	{
-		Boids = new GameObject[NumberOfBoids];
-		for (int i = 0; i < NumberOfBoids; i++)
-			Boids [i] = CreateBoid ();
+		Flock = new GameObject[QuantityBoids];
+		for (int i = 0; i < QuantityBoids; i++)
+			Flock [i] = CreateBoid (i);
 
 	}
 }

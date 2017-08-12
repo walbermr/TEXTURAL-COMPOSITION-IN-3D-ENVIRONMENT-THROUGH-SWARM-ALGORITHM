@@ -118,8 +118,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 740c00d083104694987422e7a6ad078f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NumberOfBoids: 2
-  Boids: []
+  QuantityBoids: 10
+  VisionRange: 10
+  SeparationWeight: 0.8
+  CohesionWeight: 0.1
+  AlignmentWeight: 0.1
+  Flock: []
 --- !u!4 &260574466
 Transform:
   m_ObjectHideFlags: 0
