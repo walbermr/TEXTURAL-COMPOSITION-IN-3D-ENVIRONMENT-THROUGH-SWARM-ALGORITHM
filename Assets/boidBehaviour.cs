@@ -26,6 +26,7 @@ public class boidBehaviour : MonoBehaviour
 		SeparationWeight = boidsGenerationScript.SeparationWeight;
 		CohesionWeight = boidsGenerationScript.CohesionWeight;
 		AlignmentWeight = boidsGenerationScript.AlignmentWeight;
+
 		XBorder = boidsGenerationScript.XBorder;
 		YBorder = boidsGenerationScript.YBorder;
 		ZBorder = boidsGenerationScript.ZBorder;
@@ -54,7 +55,7 @@ public class boidBehaviour : MonoBehaviour
 		foreach (GameObject other_boid in Flock)
 			movement_vector += (other_boid.transform.position - boid.transform.position);
 
-		movement_vector = -movement_vector;
+		Debug.Log ("SeparationMovement " + movement_vector.ToString ());
 		return movement_vector;
 	}
 
@@ -70,7 +71,7 @@ public class boidBehaviour : MonoBehaviour
 			center_of_mass /= VisionField.Count;
 			movement_vector = center_of_mass - boid.transform.position;
 		}
-
+		Debug.Log ("CohesionMovement " + movement_vector.ToString ());
 		return movement_vector;
 	}
 
@@ -85,8 +86,18 @@ public class boidBehaviour : MonoBehaviour
 
 			movement_vector /= VisionField.Count;
 		}
-
+		Debug.Log ("AlignmentMovement " + movement_vector.ToString ());
 		return movement_vector;
+	}
+
+	private void UpdateVelocity(GameObject boid){		
+		Rigidbody boid_rb = boid.GetComponent<Rigidbody> ();
+		boid_rb.velocity += (SeparationWeight * SeparationMovement (boid))
+			+ (CohesionWeight * CohesionMovement (boid))
+			+ (AlignmentWeight * AlignmentMovement ());
+
+		//Debug.Log (boid_rb.velocity.ToString ());
+		return;
 	}
 
 	private void CheckBounds(GameObject boid){
@@ -94,37 +105,24 @@ public class boidBehaviour : MonoBehaviour
 		float y = boid.transform.position.y;
 		float z = boid.transform.position.z;
 
-		Debug.Log (XBorder.ToString ());
-
-		if (x < -XBorder) {
-			Debug.Log ("!");
+		if (x > XBorder)
+			boid.transform.position = new Vector3 (XBorder, y, z);
+		
+		if (x < -XBorder)
 			boid.transform.position = new Vector3 (-XBorder, y, z);
-		}
-		if(x > XBorder)
-			boid.transform.position = new Vector3(XBorder, y, z);
-		if (y < -YBorder)
-			boid.transform.position = new Vector3(x, -YBorder, z);
-		if(y > YBorder)
-			boid.transform.position = new Vector3(x, YBorder, z);
-		if (z < -ZBorder)
-			boid.transform.position = new Vector3(x, y, -ZBorder);
-		if(z > ZBorder)
-			boid.transform.position = new Vector3(x, y, ZBorder);
-	}
-
-	private void UpdateVelocity(GameObject boid){
-		Vector3 velocity = new Vector3(
-			Random.Range(-1.0f, 1.0f), 
-			Random.Range(-1.0f, 1.0f), 
-			Random.Range(-1.0f, 1.0f));
 		
-		Rigidbody boid_rb = boid.GetComponent<Rigidbody> ();
-		boid_rb.velocity += (SeparationWeight * SeparationMovement (boid))
-			+ (CohesionWeight * CohesionMovement (boid))
-			+ (AlignmentWeight * AlignmentMovement ());
-
-		//Debug.Log (boid_rb.velocity.ToString ());
+		if (y > YBorder) 
+			boid.transform.position = new Vector3 (x, YBorder, z);
 		
+		if (y < -YBorder) 
+			boid.transform.position = new Vector3 (x, -YBorder, z);
+		
+		if (z > ZBorder) 
+			boid.transform.position = new Vector3 (x, y, ZBorder);
+		
+		if (z < -ZBorder) 
+			boid.transform.position = new Vector3 (x, y, -ZBorder);
+
 		return;
 	}
 
