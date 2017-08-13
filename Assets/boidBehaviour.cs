@@ -11,6 +11,10 @@ public class boidBehaviour : MonoBehaviour
 	private float CohesionWeight;
 	private float AlignmentWeight;
 
+	private float XBorder;
+	private float YBorder;
+	private float ZBorder;
+
 	// Use this for initialization
 	void Start () {
 		//find screen behaviour object
@@ -22,6 +26,9 @@ public class boidBehaviour : MonoBehaviour
 		SeparationWeight = boidsGenerationScript.SeparationWeight;
 		CohesionWeight = boidsGenerationScript.CohesionWeight;
 		AlignmentWeight = boidsGenerationScript.AlignmentWeight;
+		XBorder = boidsGenerationScript.XBorder;
+		YBorder = boidsGenerationScript.YBorder;
+		ZBorder = boidsGenerationScript.ZBorder;
 	}
 
 	private List<GameObject> BoidsSigthed(GameObject boid){
@@ -42,47 +49,81 @@ public class boidBehaviour : MonoBehaviour
 	}
 
 	private Vector3 SeparationMovement(GameObject boid){
-		Vector3 movement_vector = new Vector3(0,0,0);
+		Vector3 movement_vector = Vector3.zero;
 
 		foreach (GameObject other_boid in Flock)
-			movement_vector += (boid.transform.position - other_boid.transform.position);
+			movement_vector += (other_boid.transform.position - boid.transform.position);
 
 		movement_vector = -movement_vector;
 		return movement_vector;
 	}
 
 	private Vector3 CohesionMovement(GameObject boid){
-		Vector3 movement_vector = new Vector3(0,0,0);
-		Vector3 center_of_mass = new Vector3 (0, 0, 0);
+		Vector3 movement_vector = Vector3.zero;
+		Vector3 center_of_mass = Vector3.zero;
 
-		foreach (GameObject other_boid in VisionField) {
-			center_of_mass += other_boid.transform.position;
+		if (VisionField.Count > 0) {
+			foreach (GameObject other_boid in VisionField) {
+				center_of_mass += other_boid.transform.position;
+			}
+				
+			center_of_mass /= VisionField.Count;
+			movement_vector = center_of_mass - boid.transform.position;
 		}
-
-		center_of_mass /= VisionField.Count;
-		movement_vector = center_of_mass - boid.transform.position;
 
 		return movement_vector;
 	}
 
 	private Vector3 AlignmentMovement(){
-		Vector3 movement_vector = new Vector3(0,0,0);
+		Vector3 movement_vector = Vector3.zero;
 
-		foreach (GameObject other_boid in VisionField) {
-			Rigidbody other_boid_rb = other_boid.GetComponent<Rigidbody> ();
-			movement_vector += other_boid_rb.velocity;
+		if (VisionField.Count > 0) {
+			foreach (GameObject other_boid in VisionField) {
+				Rigidbody other_boid_rb = other_boid.GetComponent<Rigidbody> ();
+				movement_vector += other_boid_rb.velocity;
+			}
+
+			movement_vector /= VisionField.Count;
 		}
-
-		movement_vector /= VisionField.Count;
 
 		return movement_vector;
 	}
 
+	private void CheckBounds(GameObject boid){
+		float x = boid.transform.position.x;
+		float y = boid.transform.position.y;
+		float z = boid.transform.position.z;
+
+		Debug.Log (XBorder.ToString ());
+
+		if (x < -XBorder) {
+			Debug.Log ("!");
+			boid.transform.position = new Vector3 (-XBorder, y, z);
+		}
+		if(x > XBorder)
+			boid.transform.position = new Vector3(XBorder, y, z);
+		if (y < -YBorder)
+			boid.transform.position = new Vector3(x, -YBorder, z);
+		if(y > YBorder)
+			boid.transform.position = new Vector3(x, YBorder, z);
+		if (z < -ZBorder)
+			boid.transform.position = new Vector3(x, y, -ZBorder);
+		if(z > ZBorder)
+			boid.transform.position = new Vector3(x, y, ZBorder);
+	}
+
 	private void UpdateVelocity(GameObject boid){
+		Vector3 velocity = new Vector3(
+			Random.Range(-1.0f, 1.0f), 
+			Random.Range(-1.0f, 1.0f), 
+			Random.Range(-1.0f, 1.0f));
+		
 		Rigidbody boid_rb = boid.GetComponent<Rigidbody> ();
-		boid_rb.velocity = SeparationWeight * SeparationMovement (boid)
-		+ CohesionWeight * CohesionMovement (boid)
-		+ AlignmentWeight * AlignmentMovement ();
+		boid_rb.velocity += (SeparationWeight * SeparationMovement (boid))
+			+ (CohesionWeight * CohesionMovement (boid))
+			+ (AlignmentWeight * AlignmentMovement ());
+
+		//Debug.Log (boid_rb.velocity.ToString ());
 		
 		return;
 	}
@@ -94,6 +135,6 @@ public class boidBehaviour : MonoBehaviour
 		VisionField = BoidsSigthed (thisBoid);
 
 		UpdateVelocity (thisBoid);
-		
+		CheckBounds (thisBoid);
 	}
 }

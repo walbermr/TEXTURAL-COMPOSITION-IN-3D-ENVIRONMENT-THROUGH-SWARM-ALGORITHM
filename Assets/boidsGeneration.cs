@@ -9,9 +9,11 @@ public class boidsGeneration : MonoBehaviour {
 	public float CohesionWeight;
 	public float AlignmentWeight;
 
+	public float XBorder;
+	public float YBorder;
+	public float ZBorder;
+
 	public GameObject[] Flock;
-
-
 
 	GameObject CreateBoid(int i)
 	{
@@ -22,10 +24,12 @@ public class boidsGeneration : MonoBehaviour {
 			Random.Range(-10.0f, 10.0f), 
 			Random.Range(-10.0f, 10.0f), 
 			Random.Range(-10.0f, 10.0f));
+		
 		Vector3 velocity = new Vector3(
 			Random.Range(-1.0f, 1.0f), 
 			Random.Range(-1.0f, 1.0f), 
 			Random.Range(-1.0f, 1.0f));
+		
 		boid.transform.position = position;
 		boid.name = "boid" + i.ToString();
 		//add components
@@ -35,6 +39,7 @@ public class boidsGeneration : MonoBehaviour {
 		//edit components
 		Rigidbody rb = boid.GetComponent<Rigidbody> ();
 		rb.useGravity = false;
+		rb.isKinematic = false;
 		rb.velocity = velocity;
 
 		return boid;
