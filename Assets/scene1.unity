@@ -118,11 +118,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 740c00d083104694987422e7a6ad078f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  QuantityBoids: 6
-  VisionRange: 8
-  SeparationWeight: 0.3
-  CohesionWeight: 0.3
-  AlignmentWeight: 0.4
+  QuantityBoids: 4
+  VisionRange: 5
+  SeparationWeight: 0.001
+  CohesionWeight: 0.001
+  AlignmentWeight: 0.001
+  SafeDistance: 4
+  XBorder: 20
+  YBorder: 20
+  ZBorder: 20
   Flock: []
 --- !u!4 &260574466
 Transform:
@@ -131,7 +135,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 260574464}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.623, y: -0.01, z: -1.049}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

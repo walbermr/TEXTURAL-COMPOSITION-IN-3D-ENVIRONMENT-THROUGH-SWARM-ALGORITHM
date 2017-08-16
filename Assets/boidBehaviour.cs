@@ -10,6 +10,7 @@ public class boidBehaviour : MonoBehaviour
 	private float SeparationWeight;
 	private float CohesionWeight;
 	private float AlignmentWeight;
+	private float SafeDistance;
 
 	private float XBorder;
 	private float YBorder;
@@ -26,6 +27,7 @@ public class boidBehaviour : MonoBehaviour
 		SeparationWeight = boidsGenerationScript.SeparationWeight;
 		CohesionWeight = boidsGenerationScript.CohesionWeight;
 		AlignmentWeight = boidsGenerationScript.AlignmentWeight;
+		SafeDistance = boidsGenerationScript.SafeDistance;
 
 		XBorder = boidsGenerationScript.XBorder;
 		YBorder = boidsGenerationScript.YBorder;
@@ -52,11 +54,14 @@ public class boidBehaviour : MonoBehaviour
 	private Vector3 SeparationMovement(GameObject boid){
 		Vector3 movement_vector = Vector3.zero;
 
-		foreach (GameObject other_boid in Flock)
-			movement_vector += (other_boid.transform.position - boid.transform.position);
+		foreach (GameObject other_boid in VisionField) {
+			Vector3 distance_vector = other_boid.transform.position - boid.transform.position;
+			if(distance_vector.magnitude <= SafeDistance)
+				movement_vector += distance_vector;
+		}
 
-		Debug.Log ("SeparationMovement " + movement_vector.ToString ());
-		return movement_vector;
+		Debug.Log (boid.name + "SeparationMovement " + movement_vector.ToString ());
+		return -movement_vector;
 	}
 
 	private Vector3 CohesionMovement(GameObject boid){
@@ -71,11 +76,11 @@ public class boidBehaviour : MonoBehaviour
 			center_of_mass /= VisionField.Count;
 			movement_vector = center_of_mass - boid.transform.position;
 		}
-		Debug.Log ("CohesionMovement " + movement_vector.ToString ());
+		Debug.Log (boid.name + "CohesionMovement " + movement_vector.ToString ());
 		return movement_vector;
 	}
 
-	private Vector3 AlignmentMovement(){
+	private Vector3 AlignmentMovement(GameObject boid){
 		Vector3 movement_vector = Vector3.zero;
 
 		if (VisionField.Count > 0) {
@@ -86,7 +91,7 @@ public class boidBehaviour : MonoBehaviour
 
 			movement_vector /= VisionField.Count;
 		}
-		Debug.Log ("AlignmentMovement " + movement_vector.ToString ());
+		Debug.Log (boid.name + "AlignmentMovement " + movement_vector.ToString ());
 		return movement_vector;
 	}
 
@@ -94,7 +99,7 @@ public class boidBehaviour : MonoBehaviour
 		Rigidbody boid_rb = boid.GetComponent<Rigidbody> ();
 		boid_rb.velocity += (SeparationWeight * SeparationMovement (boid))
 			+ (CohesionWeight * CohesionMovement (boid))
-			+ (AlignmentWeight * AlignmentMovement ());
+			+ (AlignmentWeight * AlignmentMovement (boid));
 
 		//Debug.Log (boid_rb.velocity.ToString ());
 		return;
@@ -105,23 +110,40 @@ public class boidBehaviour : MonoBehaviour
 		float y = boid.transform.position.y;
 		float z = boid.transform.position.z;
 
-		if (x > XBorder)
+		Rigidbody rb = boid.GetComponent <Rigidbody> ();
+		float v_x = rb.velocity.x;
+		float v_y = rb.velocity.y;
+		float v_z = rb.velocity.z;
+
+		if (x > XBorder) {
 			boid.transform.position = new Vector3 (XBorder, y, z);
+			rb.velocity = -rb.velocity;
+		}
 		
-		if (x < -XBorder)
+		if (x < -XBorder) {
 			boid.transform.position = new Vector3 (-XBorder, y, z);
+			rb.velocity = -rb.velocity;
+		}
 		
-		if (y > YBorder) 
+		if (y > YBorder) {
 			boid.transform.position = new Vector3 (x, YBorder, z);
+			rb.velocity = -rb.velocity;
+		}
 		
-		if (y < -YBorder) 
+		if (y < -YBorder) {
 			boid.transform.position = new Vector3 (x, -YBorder, z);
-		
-		if (z > ZBorder) 
+			rb.velocity = -rb.velocity;
+		}
+
+		if (z > ZBorder) {
 			boid.transform.position = new Vector3 (x, y, ZBorder);
+			rb.velocity = -rb.velocity;
+		}
 		
-		if (z < -ZBorder) 
+		if (z < -ZBorder) {
 			boid.transform.position = new Vector3 (x, y, -ZBorder);
+			rb.velocity = -rb.velocity;
+		}
 
 		return;
 	}
