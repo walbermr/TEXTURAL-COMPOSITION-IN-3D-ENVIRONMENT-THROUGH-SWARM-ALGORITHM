@@ -118,12 +118,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 740c00d083104694987422e7a6ad078f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  QuantityBoids: 4
-  VisionRange: 5
-  SeparationWeight: 0.001
-  CohesionWeight: 0.001
-  AlignmentWeight: 0.001
+  QuantityBoids: 20
+  VisionRange: 6
+  SeparationWeight: 1
+  CohesionWeight: 1
+  AlignmentWeight: 1
   SafeDistance: 4
+  MaxAbsoluteVelocity: 3
   XBorder: 20
   YBorder: 20
   ZBorder: 20

@@ -9,6 +9,7 @@ public class boidsGeneration : MonoBehaviour {
 	public float CohesionWeight;
 	public float AlignmentWeight;
 	public float SafeDistance;
+	public float MaxAbsoluteVelocity;
 
 	public float XBorder;
 	public float YBorder;

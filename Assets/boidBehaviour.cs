@@ -11,6 +11,7 @@ public class boidBehaviour : MonoBehaviour
 	private float CohesionWeight;
 	private float AlignmentWeight;
 	private float SafeDistance;
+	private float MaxAbsoluteVelocity;
 
 	private float XBorder;
 	private float YBorder;
@@ -28,6 +29,7 @@ public class boidBehaviour : MonoBehaviour
 		CohesionWeight = boidsGenerationScript.CohesionWeight;
 		AlignmentWeight = boidsGenerationScript.AlignmentWeight;
 		SafeDistance = boidsGenerationScript.SafeDistance;
+		MaxAbsoluteVelocity = boidsGenerationScript.MaxAbsoluteVelocity;
 
 		XBorder = boidsGenerationScript.XBorder;
 		YBorder = boidsGenerationScript.YBorder;
@@ -101,6 +103,8 @@ public class boidBehaviour : MonoBehaviour
 			+ (CohesionWeight * CohesionMovement (boid))
 			+ (AlignmentWeight * AlignmentMovement (boid));
 
+		boid_rb.velocity = boid_rb.velocity.normalized * MaxAbsoluteVelocity;
+
 		//Debug.Log (boid_rb.velocity.ToString ());
 		return;
 	}
@@ -120,7 +124,7 @@ public class boidBehaviour : MonoBehaviour
 			rb.velocity = -rb.velocity;
 		}
 		
-		if (x < -XBorder) {
+		else if (x < -XBorder) {
 			boid.transform.position = new Vector3 (-XBorder, y, z);
 			rb.velocity = -rb.velocity;
 		}
@@ -130,7 +134,7 @@ public class boidBehaviour : MonoBehaviour
 			rb.velocity = -rb.velocity;
 		}
 		
-		if (y < -YBorder) {
+		else if (y < -YBorder) {
 			boid.transform.position = new Vector3 (x, -YBorder, z);
 			rb.velocity = -rb.velocity;
 		}
@@ -140,7 +144,7 @@ public class boidBehaviour : MonoBehaviour
 			rb.velocity = -rb.velocity;
 		}
 		
-		if (z < -ZBorder) {
+		else if (z < -ZBorder) {
 			boid.transform.position = new Vector3 (x, y, -ZBorder);
 			rb.velocity = -rb.velocity;
 		}
