@@ -11,6 +11,8 @@ public class boidsGeneration : MonoBehaviour {
 	public float SafeDistance;
 	public float MaxAbsoluteVelocity;
 
+	private int FrameInterval;
+
 	public float XBorder;
 	public float YBorder;
 	public float ZBorder;
@@ -36,6 +38,7 @@ public class boidsGeneration : MonoBehaviour {
 		boid.name = "boid" + i.ToString();
 		//add components
 		boid.AddComponent<boidBehaviour> ();
+		boid.GetComponent<boidBehaviour> ().interval = i % this.FrameInterval;
 		boid.AddComponent<Rigidbody> ();
 
 		//edit components
@@ -49,6 +52,7 @@ public class boidsGeneration : MonoBehaviour {
 
 	void Start()
 	{
+		this.FrameInterval = QuantityBoids;
 		Flock = new GameObject[QuantityBoids];
 		for (int i = 0; i < QuantityBoids; i++)
 			Flock [i] = CreateBoid (i);

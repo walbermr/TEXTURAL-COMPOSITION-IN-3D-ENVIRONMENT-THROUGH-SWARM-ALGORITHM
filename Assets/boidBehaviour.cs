@@ -17,6 +17,8 @@ public class boidBehaviour : MonoBehaviour
 	private float YBorder;
 	private float ZBorder;
 
+	public int interval;
+
 	// Use this for initialization
 	void Start () {
 		//find screen behaviour object
@@ -154,11 +156,14 @@ public class boidBehaviour : MonoBehaviour
 
 	// Update is called once per frame
 	void Update () {
-		GameObject thisBoid = this.gameObject;
+		if (Time.frameCount % this.interval == 0)
+		{
+			GameObject thisBoid = this.gameObject;
+			VisionField = BoidsSigthed (thisBoid);
 
-		VisionField = BoidsSigthed (thisBoid);
-
-		UpdateVelocity (thisBoid);
-		CheckBounds (thisBoid);
+			UpdateVelocity (thisBoid);
+			CheckBounds (thisBoid);
+		}
 	}
+
 }
