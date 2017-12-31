@@ -19,7 +19,6 @@ public class boidBehaviour : MonoBehaviour
 
 	public int interval;
 
-	// Use this for initialization
 	void Start () {
 		//find screen behaviour object
 		GameObject sceneBehaviour = GameObject.Find("SceneBehaviour");
