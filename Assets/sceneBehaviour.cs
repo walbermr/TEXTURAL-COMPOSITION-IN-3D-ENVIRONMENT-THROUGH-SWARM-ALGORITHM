@@ -15,6 +15,7 @@ public class sceneBehaviour : MonoBehaviour {
 		GameObject scene = this.gameObject;
 		int boidNumber = scene.GetComponent<boidsGeneration> ().Flock.Count;
 
+		buttonText.color = Color.green;
 		int recordTime = time;
 		for (int i = recordTime; i > 0; i--) {
 			buttonText.text = text + i.ToString ();	
@@ -22,10 +23,10 @@ public class sceneBehaviour : MonoBehaviour {
 		}
 
 
-		text = "Recording for ";
+		text = "Recording... ";
 		recordTime = Random.Range (2, 5);
 		newSound = Microphone.Start(null, false, recordTime, 44100);
-			
+		buttonText.color = Color.red;	
 		for (int i = recordTime; i > 0; i--) {
 			buttonText.text = text + i.ToString ();	
 			yield return new WaitForSeconds (1);
@@ -33,6 +34,7 @@ public class sceneBehaviour : MonoBehaviour {
 
 		SavWav.Save (Application.dataPath + "/Resources/Sounds", "boid" + boidNumber.ToString(), newSound);
 		buttonText.text = "Record";
+		buttonText.color = Color.black;
 		_isRecording = false;
 
 		scene.GetComponent<boidsGeneration> ().AddBoid (boidNumber, newSound);
