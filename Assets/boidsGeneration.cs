@@ -21,7 +21,6 @@ public class boidsGeneration : MonoBehaviour {
 //	}
 
 	//store gameObject reference on global contex
-	public int QuantityBoids;
 	public float VisionRange;
 	public float SeparationWeight;
 	public float CohesionWeight;
@@ -103,16 +102,17 @@ public class boidsGeneration : MonoBehaviour {
 	}
 
 	public void AddBoid(int i){
+		this.FrameInterval = Flock.Count + 1;
 		Flock.Add(CreateBoid (i));
 	}
 
 	public void AddBoid(int i, AudioClip clip){
+		this.FrameInterval = Flock.Count + 1;
 		Flock.Add(CreateBoid (i, clip));
 	}
 
 	void Start()
 	{
-		this.FrameInterval = QuantityBoids;
 		Flock = new List<GameObject> ();
 //		for (int i = 0; i < QuantityBoids; i++)
 //			Flock [i] = CreateBoid (i);
