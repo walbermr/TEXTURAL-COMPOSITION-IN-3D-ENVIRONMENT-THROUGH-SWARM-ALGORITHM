@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class boidBehaviour : MonoBehaviour
 {
-	private GameObject[] Flock;
 	private float VisionRange;
 	private List<GameObject> VisionField;
 	private float SeparationWeight;
@@ -24,7 +23,6 @@ public class boidBehaviour : MonoBehaviour
 		GameObject sceneBehaviour = GameObject.Find("SceneBehaviour");
 		//get boids vector
 		boidsGeneration boidsGenerationScript = sceneBehaviour.GetComponent<boidsGeneration>();
-		Flock = boidsGenerationScript.Flock;
 		VisionRange = boidsGenerationScript.VisionRange;
 		SeparationWeight = boidsGenerationScript.SeparationWeight;
 		CohesionWeight = boidsGenerationScript.CohesionWeight;
@@ -38,9 +36,14 @@ public class boidBehaviour : MonoBehaviour
 	}
 
 	private List<GameObject> BoidsSigthed(GameObject boid){
-		List<GameObject> boid_vision = new List<GameObject>();
+		//find screen behaviour object
+		GameObject sceneBehaviour = GameObject.Find("SceneBehaviour");
 
-		foreach (GameObject other_boid in Flock){
+		boidsGeneration boidsGenerationScript = sceneBehaviour.GetComponent<boidsGeneration>();
+		List<GameObject> boid_vision = new List<GameObject>();
+		List<GameObject> flock = boidsGenerationScript.Flock;
+
+		foreach (GameObject other_boid in flock){
 			Vector3 other_boid_position = other_boid.transform.position;
 			Vector3 vectorial_distance = other_boid_position - boid.transform.position;
 			float scalar_distance = vectorial_distance.magnitude;
