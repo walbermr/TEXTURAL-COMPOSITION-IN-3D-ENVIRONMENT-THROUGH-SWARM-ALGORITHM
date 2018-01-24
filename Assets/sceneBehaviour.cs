@@ -8,6 +8,17 @@ public class sceneBehaviour : MonoBehaviour {
 
 	void Start(){
 		Application.targetFrameRate = 30;
+		ActivateMultiDisplays ();
+	}
+
+
+	private void ActivateMultiDisplays(){
+		int qtDisplays = Display.displays.Length;
+		Debug.Log("displays connected: " + qtDisplays);
+
+		for (int i = 1; i < qtDisplays; i++)
+			Display.displays [i].Activate();
+
 	}
 
 	IEnumerator StartRecord(int time, Text buttonText, string text){
